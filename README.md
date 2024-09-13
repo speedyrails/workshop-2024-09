@@ -78,6 +78,7 @@ crear el cluster
 ```
 CLUSTER_NAME=workshop
 PUBLIC_SUBNET=`aws cloudformation describe-stacks --stack-name workshop  --query "Stacks[0].Outputs[?OutputKey=='PublicSubnets'].OutputValue" --output text`
+PRIVATE_SUBNET=`aws cloudformation describe-stacks --stack-name workshop  --query "Stacks[0].Outputs[?OutputKey=='PrivateSubnets'].OutputValue" --output text`
 REGION=`curl http://169.254.169.254/latest/meta-data/placement/region`        
 
 eksctl create cluster --name ${CLUSTER_NAME}  \
@@ -88,6 +89,7 @@ eksctl create cluster --name ${CLUSTER_NAME}  \
       --without-nodegroup \
       --authenticator-role-arn string  \
       --vpc-public-subnets=${PUBLIC_SUBNET}
+      --vpc-private-subnets=${PRIVATE_SUBNET}
 
 aws eks update-kubeconfig --name ${CLUSTER_NAME}
 
@@ -106,8 +108,66 @@ eksctl create addon --name coredns --cluster ${CLUSTER_NAME} --region ${REGION} 
 eksctl create addon --name kube-proxy --cluster ${CLUSTER_NAME} --region ${REGION} --force
 eksctl create addon --name vpc-cni --cluster ${CLUSTER_NAME} --region ${REGION} --force
 
-
-
-
 ```
+
+Instalacion de una aplicacion de ejemplo
+
+ALB_VERSION=v2.2.0
+ALB_VERSION_FILE=v2_2_0_full
+
+curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/${ALB_VERSION}/docs/install/iam_policy.json
+
+aws iam create-policy \
+    --policy-name EKS-AWSLoadBalancerControllerIAMPolicy-${CLUSTER_NAME} \
+    --policy-document file://iam-policy.json
+        
+eksctl create iamserviceaccount \
+--cluster=${CLUSTER_NAME} \
+--region=${REGION} \
+--namespace=kube-system \
+--name=aws-load-balancer-controller \
+--attach-policy-arn=arn:aws:iam::$USER_ID:policy/EKS-AWSLoadBalancerControllerIAMPolicy-${CLUSTER_NAME} \
+--override-existing-serviceaccounts \
+--approve
+
+
+
+
+
+
+
+Proceso de actualizacion y correccion
+
+Los nodos estan en una red publica .. pasarlo a una privada
+OrganizationAccountAccessRole:~ $ kubectl get nodes -o wide
+NAME                         STATUS   ROLES    AGE   VERSION                INTERNAL-IP   EXTERNAL-IP    OS-IMAGE         KERNEL-VERSION                  CONTAINER-RUNTIME
+ip-10-0-59-40.ec2.internal   Ready    <none>   19m   v1.23.17-eks-1552ad0   10.0.59.40    98.81.234.16   Amazon Linux 2   5.10.223-212.873.amzn2.x86_64   docker://25.0.6
+
+
+Para pasarlos a una privada se crea un nodegroup nuevo
+
+eksctl create nodegroup \
+  --cluster ${CLUSTER_NAME} \
+  --region ${REGION} \
+  --name ng-3 \
+  --node-type t3.medium \
+  --nodes-min 1 \
+  --nodes-max 3 \
+  --node-volume-size 40 \
+  --managed \
+  --node-private-networking
+  
+
+Actualizacion del ALB
+
+Karpenter or AWS Autoscaler
+
+
+CloudWatch ?
+Problemas de costos si karpenter crear nodos frecuentemente
+
+
+      
+      
+
   
