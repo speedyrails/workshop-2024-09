@@ -62,37 +62,52 @@ git clone git@github.com:speedyrails/workshop-2024-09.git
 ```
 crear  vpc
 ```
-aws cloudformation create-stack --stack-name myteststack --template-body file://01-cfn-vpc.yaml 
+aws cloudformation create-stack --stack-name workshop --template-body file://01-cfn-vpc.yaml 
 ```
 crear eks en redes
 ```
 curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.114.0/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-mv /tmp/eksctl /usr/local/bin
+sudo mv /tmp/eksctl /usr/local/bin
+
+curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin
 ```
 
 crear el cluster
 ```
 CLUSTER_NAME=workshop
-PUBLIC_SUBNET=`aws cloudformation describe-stacks --stack-name myteststack  --query "Stacks[0].Outputs[?OutputKey=='PublicSubnets'].OutputValue" --output text`
-REGION=$(aws configure get region)
+PUBLIC_SUBNET=`aws cloudformation describe-stacks --stack-name workshop  --query "Stacks[0].Outputs[?OutputKey=='PublicSubnets'].OutputValue" --output text`
+REGION=`curl http://169.254.169.254/latest/meta-data/placement/region`        
 
 eksctl create cluster --name ${CLUSTER_NAME}  \
       --timeout 20m \
       --version 1.23 \
+      --region ${REGION} \
        --with-oidc \
       --without-nodegroup \
       --authenticator-role-arn string  \
       --vpc-public-subnets=${PUBLIC_SUBNET}
 
+aws eks update-kubeconfig --name ${CLUSTER_NAME}
+
 
 eksctl create nodegroup \
   --cluster ${CLUSTER_NAME} \
+  --region ${REGION} \
   --name ng-1 \
-  --instance-types t3.medium \
-  --desired-capacity 2 \
-  --min-size 1 \
-  --max-size 3 \
-  --volume-size 20 \
+  --node-type t3.medium \
+  --nodes-min 1 \
+  --nodes-max 3 \
+  --node-volume-size 40 \
   --managed
+
+eksctl create addon --name coredns --cluster ${CLUSTER_NAME} --region ${REGION} --force
+eksctl create addon --name kube-proxy --cluster ${CLUSTER_NAME} --region ${REGION} --force
+eksctl create addon --name vpc-cni --cluster ${CLUSTER_NAME} --region ${REGION} --force
+
+
+
+
 ```
   
