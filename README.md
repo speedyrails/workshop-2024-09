@@ -88,7 +88,7 @@ eksctl create cluster --name ${CLUSTER_NAME}  \
        --with-oidc \
       --without-nodegroup \
       --authenticator-role-arn string  \
-      --vpc-public-subnets=${PUBLIC_SUBNET}
+      --vpc-public-subnets=${PUBLIC_SUBNET} \
       --vpc-private-subnets=${PRIVATE_SUBNET}
 
 aws eks update-kubeconfig --name ${CLUSTER_NAME}
