@@ -156,9 +156,7 @@ Resources:
       RouteTableIds: 
         - !Ref PrivateRouteTable
       VpcEndpointType: Gateway
-      Tags:
-        - Key: Name
-          Value: !Sub "S3Endpoint_${VpcName}"
+
 
 Outputs:
   VpcId:
