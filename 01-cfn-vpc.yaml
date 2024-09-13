@@ -51,6 +51,9 @@ Resources:
       CidrBlock: !Select [0, !Cidr [!Ref VpcCidrBlock, 8,13]]
       MapPublicIpOnLaunch: true
       AvailabilityZone: !Select [0, !GetAZs ""]
+      Tags:
+        - Key: Name
+          Value: "Workshop Public Subnet 1"
 
   PublicSubnet2:
     Type: AWS::EC2::Subnet
@@ -59,6 +62,9 @@ Resources:
       CidrBlock: !Select [1, !Cidr [!Ref VpcCidrBlock, 8, 13]]
       MapPublicIpOnLaunch: true
       AvailabilityZone: !Select [1, !GetAZs ""]
+      Tags:
+        - Key: Name
+          Value: "Workshop Public Subnet 2"
 
   # NAT Gateway Elastic IP
   NatGatewayEIP:
@@ -83,6 +89,9 @@ Resources:
       VpcId: !Ref VPC
       CidrBlock: !Select [2, !Cidr [!Ref VpcCidrBlock, 8, 13]]
       AvailabilityZone: !Select [0, !GetAZs ""]
+      Tags:
+        - Key: Name
+          Value: "Workshop Private Subnet 1"
 
   PrivateSubnet2:
     Type: AWS::EC2::Subnet
@@ -90,6 +99,9 @@ Resources:
       VpcId: !Ref VPC
       CidrBlock: !Select [3, !Cidr [!Ref VpcCidrBlock, 8, 13]]
       AvailabilityZone: !Select [1, !GetAZs ""]
+      Tags:
+        - Key: Name
+          Value: "Workshop Private Subnet 2"
 
   # Public Route Table
   PublicRouteTable:
