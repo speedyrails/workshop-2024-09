@@ -2,6 +2,7 @@ crear cloud9 ... asignar role cloud9fulladmin
 
 acceder
 
+```
 cd /home/ubuntu/.ssh
 
 cat > /home/ubuntu/.ssh/id_rsa.imp << 'EOF'
@@ -46,28 +47,31 @@ zi77nXc+ginfoTAAAAFnVidW50dUBpcC0xNzItMzEtMS0xNTMBAgME
 EOF
 
 cat > /home/ubuntu/.ssh/id_rsa.pub.imp << 'EOF'
-'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCOsaTdr9qc1WFJK7H5/sHpH8oRTMlqRZwb5XDn3Lp2EPOsb9wiYiZNvtGTPFqy4miY9KgZzQ3/vQVdU6GWria8D4UIMfKANFNa/byFc4zIXPGALLYl7hhB/MHx6UPKu+twqgtN52qbmPwfIqgwcMOt2s3I3Qd2FGf3Nn6jgFGhlZhhmZUI3DiEe0E35jbUYbUCBoAmFKQNlvLFrKxJ54lhAbbZY/pEh0X07SbO18JVJMYjdsxtruqlf6AcnNQornlNqwssb80xzaS8+irJlc9ykjUOEtVx/u4E3w93JR05ETBUOQxD1fLQYM2DK6EbMw9Xzx9ICEIo07J9wm4tkBw8RXC+CRUoUzo9nsqeXFQIdN8BwSiZfQE6GJxd84aHCd0nLjCfwwdzOcJJblCRPYdko87S7aStOA3lPU64cmahCpFkQhDfo/EXWyGO/ph7+nT02P0RmajqEj55On8C/h3eC5b0yYquMU8lyJ8JrhtHIAuiz30JHlizHTheCY2x2Sk= ubuntu@ip-172-31-1-153
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCOsaTdr9qc1WFJK7H5/sHpH8oRTMlqRZwb5XDn3Lp2EPOsb9wiYiZNvtGTPFqy4miY9KgZzQ3/vQVdU6GWria8D4UIMfKANFNa/byFc4zIXPGALLYl7hhB/MHx6UPKu+twqgtN52qbmPwfIqgwcMOt2s3I3Qd2FGf3Nn6jgFGhlZhhmZUI3DiEe0E35jbUYbUCBoAmFKQNlvLFrKxJ54lhAbbZY/pEh0X07SbO18JVJMYjdsxtruqlf6AcnNQornlNqwssb80xzaS8+irJlc9ykjUOEtVx/u4E3w93JR05ETBUOQxD1fLQYM2DK6EbMw9Xzx9ICEIo07J9wm4tkBw8RXC+CRUoUzo9nsqeXFQIdN8BwSiZfQE6GJxd84aHCd0nLjCfwwdzOcJJblCRPYdko87S7aStOA3lPU64cmahCpFkQhDfo/EXWyGO/ph7+nT02P0RmajqEj55On8C/h3eC5b0yYquMU8lyJ8JrhtHIAuiz30JHlizHTheCY2x2Sk= ubuntu@ip-172-31-1-153
 EOF
 
 chmod 500 /home/ubuntu/.ssh/id_rsa.priv
 mv -f /home/ubuntu/.ssh/id_rsa.imp /home/ubuntu/.ssh/id_rsa
 mv -f /home/ubuntu/.ssh/id_rsa.pub.imp /home/ubuntu/.ssh/id_rsa.pub
-
+```
 
 #clonar repo
+```
 cd  /home/ubuntu/environment
 git clone git@github.com:speedyrails/workshop-2024-09.git
-
+```
 crear  vpc
-
+```
 aws cloudformation create-stack --stack-name myteststack --template-body file://01-cfn-vpc.yaml 
-
+```
 crear eks en redes
+```
 curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.114.0/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
 mv /tmp/eksctl /usr/local/bin
-
+```
 
 crear el cluster
+```
 CLUSTER_NAME=workshop
 PUBLIC_SUBNET=`aws cloudformation describe-stacks --stack-name myteststack  --query "Stacks[0].Outputs[?OutputKey=='PublicSubnets'].OutputValue" --output text`
 REGION=$(aws configure get region)
@@ -90,4 +94,5 @@ eksctl create nodegroup \
   --max-size 3 \
   --volume-size 20 \
   --managed
+```
   
