@@ -1,10 +1,64 @@
 crear cloud9 ... asignar role cloud9fulladmin
 
-acceder 
+acceder
 
-clonar repo 
+cd /home/ubuntu/.ssh
+cat > id_rsa << EOF
+-----BEGIN OPENSSH PRIVATE KEY-----
+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
+-----END OPENSSH PRIVATE KEY-----
+EOF
+cat > id_rsa.pub << EOF
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCOsaTdr9qc1WFJK7H5/sHpH8oRTMlqRZwb5XDn3Lp2EPOsb9wiYiZNvtGTPFqy4miY9KgZzQ3/vQVdU6GWria8D4UIMfKANFNa/byFc4zIXPGALLYl7hhB/MHx6UPKu+twqgtN52qbmPwfIqgwcMOt2s3I3Qd2FGf3Nn6jgFGhlZhhmZUI3DiEe0E35jbUYbUCBoAmFKQNlvLFrKxJ54lhAbbZY/pEh0X07SbO18JVJMYjdsxtruqlf6AcnNQornlNqwssb80xzaS8+irJlc9ykjUOEtVx/u4E3w93JR05ETBUOQxD1fLQYM2DK6EbMw9Xzx9ICEIo07J9wm4tkBw8RXC+CRUoUzo9nsqeXFQIdN8BwSiZfQE6GJxd84aHCd0nLjCfwwdzOcJJblCRPYdko87S7aStOA3lPU64cmahCpFkQhDfo/EXWyGO/ph7+nT02P0RmajqEj55On8C/h3eC5b0yYquMU8lyJ8JrhtHIAuiz30JHlizHTheCY2x2Sk= ubuntu@ip-172-31-1-153
+EOF
+chmod 500 id_rsa.pub
+
+
+
+cd  /home/ubuntu/environment
+
+
+
+
+clonar repo git@github.com:speedyrails/workshop-2024-09.git
 
 crear  vpc
+
 aws cloudformation create-stack --stack-name myteststack --template-body file://01-cfn-vpc.yaml 
 
 crear eks en redes
@@ -28,7 +82,6 @@ eksctl create cluster --name ${CLUSTER_NAME}  \
 
 eksctl create nodegroup \
   --cluster ${CLUSTER_NAME} \
-  --region ${REGION} \
   --name ng-1 \
   --instance-types t3.medium \
   --desired-capacity 2 \
