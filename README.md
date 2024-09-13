@@ -4,8 +4,7 @@ acceder
 
 cd /home/ubuntu/.ssh
 
-cat > id_rsa << EOF
-
+cat > /home/ubuntu/.ssh/id_rsa.imp << 'EOF'
 -----BEGIN OPENSSH PRIVATE KEY-----
 b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn
 NhAAAAAwEAAQAAAYEAjrGk3a/anNVhSSux+f7B6R/KEUzJakWcG+Vw59y6dhDzrG/cImIm
@@ -44,27 +43,20 @@ v2fQoo44hGNyi+RZj+qPrGfWpiS6S51nAX2YJzLO1XH5lbkydtsXPpWAuwpvaOqH70KvOu
 IDwb60GJdqlkAP3iA2aGf5d+tIQBEbvdfPwnqJv6kgvceP8yqHlygguHMBNvVRDJV66aMh
 zi77nXc+ginfoTAAAAFnVidW50dUBpcC0xNzItMzEtMS0xNTMBAgME
 -----END OPENSSH PRIVATE KEY-----
-
 EOF
 
-cat > id_rsa.pub << EOF
-
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCOsaTdr9qc1WFJK7H5/sHpH8oRTMlqRZwb5XDn3Lp2EPOsb9wiYiZNvtGTPFqy4miY9KgZzQ3/vQVdU6GWria8D4UIMfKANFNa/byFc4zIXPGALLYl7hhB/MHx6UPKu+twqgtN52qbmPwfIqgwcMOt2s3I3Qd2FGf3Nn6jgFGhlZhhmZUI3DiEe0E35jbUYbUCBoAmFKQNlvLFrKxJ54lhAbbZY/pEh0X07SbO18JVJMYjdsxtruqlf6AcnNQornlNqwssb80xzaS8+irJlc9ykjUOEtVx/u4E3w93JR05ETBUOQxD1fLQYM2DK6EbMw9Xzx9ICEIo07J9wm4tkBw8RXC+CRUoUzo9nsqeXFQIdN8BwSiZfQE6GJxd84aHCd0nLjCfwwdzOcJJblCRPYdko87S7aStOA3lPU64cmahCpFkQhDfo/EXWyGO/ph7+nT02P0RmajqEj55On8C/h3eC5b0yYquMU8lyJ8JrhtHIAuiz30JHlizHTheCY2x2Sk= ubuntu@ip-172-31-1-153
-
+cat > /home/ubuntu/.ssh/id_rsa.pub.imp << 'EOF'
+'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCOsaTdr9qc1WFJK7H5/sHpH8oRTMlqRZwb5XDn3Lp2EPOsb9wiYiZNvtGTPFqy4miY9KgZzQ3/vQVdU6GWria8D4UIMfKANFNa/byFc4zIXPGALLYl7hhB/MHx6UPKu+twqgtN52qbmPwfIqgwcMOt2s3I3Qd2FGf3Nn6jgFGhlZhhmZUI3DiEe0E35jbUYbUCBoAmFKQNlvLFrKxJ54lhAbbZY/pEh0X07SbO18JVJMYjdsxtruqlf6AcnNQornlNqwssb80xzaS8+irJlc9ykjUOEtVx/u4E3w93JR05ETBUOQxD1fLQYM2DK6EbMw9Xzx9ICEIo07J9wm4tkBw8RXC+CRUoUzo9nsqeXFQIdN8BwSiZfQE6GJxd84aHCd0nLjCfwwdzOcJJblCRPYdko87S7aStOA3lPU64cmahCpFkQhDfo/EXWyGO/ph7+nT02P0RmajqEj55On8C/h3eC5b0yYquMU8lyJ8JrhtHIAuiz30JHlizHTheCY2x2Sk= ubuntu@ip-172-31-1-153
 EOF
 
-chmod 500 id_rsa.pub
+chmod 500 /home/ubuntu/.ssh/id_rsa.priv
+mv -f /home/ubuntu/.ssh/id_rsa.imp /home/ubuntu/.ssh/id_rsa
+mv -f /home/ubuntu/.ssh/id_rsa.pub.imp /home/ubuntu/.ssh/id_rsa.pub
 
 
-
-
-
+#clonar repo
 cd  /home/ubuntu/environment
-
-
-
-
-clonar repo git@github.com:speedyrails/workshop-2024-09.git
+git clone git@github.com:speedyrails/workshop-2024-09.git
 
 crear  vpc
 
