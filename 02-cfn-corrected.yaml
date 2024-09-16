@@ -405,7 +405,7 @@ Resources:
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub 'poorly-optimized-eks-bucket-${AWS::AccountId}-${AWS::Region}'
+      BucketName: !Sub 'optimized-eks-bucket-${AWS::AccountId}-${AWS::Region}'
       VersioningConfiguration:
         Status: Enabled
       BucketEncryption:
