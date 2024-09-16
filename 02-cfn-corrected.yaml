@@ -73,6 +73,9 @@ Resources:
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
+    DependsOn:
+    - VPC
+    - InternetGateway
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
@@ -109,6 +112,9 @@ Resources:
   # NAT Gateway
   NatGateway:
     Type: AWS::EC2::NatGateway
+    DependsOn:
+    - NatGatewayEIP
+    - PublicSubnet1
     Properties:
       AllocationId: !GetAtt NatGatewayEIP.AllocationId
       SubnetId: !Ref PublicSubnet1
@@ -148,6 +154,9 @@ Resources:
 
   PublicRoute:
     Type: AWS::EC2::Route
+    DependsOn:
+    - AttachGateway
+    - PublicRouteTable
     Properties:
       RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: "0.0.0.0/0"
@@ -155,12 +164,18 @@ Resources:
 
   PublicSubnetRouteTableAssociation1:
     Type: AWS::EC2::SubnetRouteTableAssociation
+    DependsOn:
+    - PublicSubnet1
+    - PublicRouteTable
     Properties:
       SubnetId: !Ref PublicSubnet1
       RouteTableId: !Ref PublicRouteTable
 
   PublicSubnetRouteTableAssociation2:
     Type: AWS::EC2::SubnetRouteTableAssociation
+    DependsOn:
+    - PublicSubnet2
+    - PublicRouteTable
     Properties:
       SubnetId: !Ref PublicSubnet2
       RouteTableId: !Ref PublicRouteTable
@@ -176,6 +191,9 @@ Resources:
 
   PrivateRoute:
     Type: AWS::EC2::Route
+    DependsOn:
+    - NatGateway
+    - PrivateRouteTable
     Properties:
       RouteTableId: !Ref PrivateRouteTable
       DestinationCidrBlock: "0.0.0.0/0"
@@ -183,12 +201,18 @@ Resources:
 
   PrivateSubnetRouteTableAssociation1:
     Type: AWS::EC2::SubnetRouteTableAssociation
+    DependsOn:
+    - PrivateSubnet1
+    - PrivateRouteTable
     Properties:
       SubnetId: !Ref PrivateSubnet1
       RouteTableId: !Ref PrivateRouteTable
 
   PrivateSubnetRouteTableAssociation2:
     Type: AWS::EC2::SubnetRouteTableAssociation
+    DependsOn:
+    - PrivateSubnet2
+    - PrivateRouteTable
     Properties:
       SubnetId: !Ref PrivateSubnet2
       RouteTableId: !Ref PrivateRouteTable
@@ -196,6 +220,8 @@ Resources:
   # S3 VPC Endpoint for Private Subnets
   S3VPCEndpoint:
     Type: AWS::EC2::VPCEndpoint
+    DependsOn:
+    - PrivateRouteTable 
     Properties:
       VpcId: !Ref VPC
       ServiceName: !Sub "com.amazonaws.${AWS::Region}.s3"
@@ -297,6 +323,11 @@ Resources:
   # EKS Cluster
   EKSCluster:
     Type: AWS::EKS::Cluster
+    DependsOn:
+    - EKSClusterRole
+    - ClusterControlPlaneSecurityGroup
+    - PrivateSubnet1
+    - PrivateSubnet2
     Properties:
       Name: !Ref ClusterName
       Version: !Ref KubernetesVersion
@@ -347,6 +378,10 @@ Resources:
   # EKS Managed Node Group
   NodeGroup:
     Type: AWS::EKS::Nodegroup
+    DependsOn:
+    - EKSCluster
+    - NodeInstanceRole
+    - NodeLaunchTemplate
     Properties:
       ClusterName: !Ref EKSCluster
       NodegroupName: !Sub '${ClusterName}-nodegroup'
@@ -389,6 +424,8 @@ Resources:
   # Bucket Policy to Enforce HTTPS (Secure Data in Transit)
   S3BucketPolicy:
     Type: AWS::S3::BucketPolicy
+    DependsOn:
+    - S3Bucket
     Properties:
       Bucket: !Ref S3Bucket
       PolicyDocument:
@@ -410,6 +447,8 @@ Resources:
   # CoreDNS Addon
   CoreDNSAddon:
     Type: AWS::EKS::Addon
+    DependsOn:
+    - EKSCluster
     Properties:
       AddonName: coredns
       ClusterName: !Ref ClusterName
@@ -418,6 +457,8 @@ Resources:
   # VPC CNI Addon
   VPCCNIAddon:
     Type: AWS::EKS::Addon
+    DependsOn:
+    - EKSCluster
     Properties:
       AddonName: vpc-cni
       ClusterName: !Ref ClusterName
@@ -426,6 +467,8 @@ Resources:
   # kube-proxy Addon
   KubeProxyAddon:
     Type: AWS::EKS::Addon
+    DependsOn:
+    - EKSCluster
     Properties:
       AddonName: kube-proxy
       ClusterName: !Ref ClusterName
