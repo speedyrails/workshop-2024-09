@@ -14,7 +14,7 @@ Parameters:
   KubernetesVersion:
     Type: String
     Description: Kubernetes version for the EKS cluster.
-    Default: '1.24'
+    Default: '1.29'
 
   VpcCidrBlock:
     Type: String
@@ -24,7 +24,7 @@ Parameters:
   VpcName:
     Type: String
     Description: Name of the VPC.
-    Default: 'my-vpc'
+    Default: 'WorkshopVPC'
 
   NodeGroupDesiredCapacity:
     Type: Number
@@ -362,7 +362,7 @@ Resources:
       LaunchTemplate:
         Name: !Ref NodeLaunchTemplate
         Version: '$Latest'
-      ReleaseVersion: '1.29.6-20240910'
+      ReleaseVersion: '1.29.6-20240904'
       CapacityType: ON_DEMAND
       Tags:
         Name: !Sub '${ClusterName}-nodegroup'
