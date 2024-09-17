@@ -49,12 +49,12 @@ Parameters:
   AvailabilityZone1:
     Type: AWS::EC2::AvailabilityZone::Name
     Description: The first Availability Zone to use for subnets.
-    Default: !Select [0, !GetAZs ""]
+    Default: us-east-1a
 
   AvailabilityZone2:
     Type: AWS::EC2::AvailabilityZone::Name
     Description: The second Availability Zone to use for subnets.
-    Default: !Select [1, !GetAZs ""]
+    Default: us-east-1b
 
 Resources:
   # VPC Creation
@@ -419,29 +419,12 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
         - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
 
-  # Launch Template for Node Group
-  NodeLaunchTemplate:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub "${ClusterName}-launch-template"
-      LaunchTemplateData:
-        SecurityGroupIds:
-          - !Ref NodeSecurityGroup
-        TagSpecifications:
-          - ResourceType: instance
-            Tags:
-              - Key: Name
-                Value: !Sub "${ClusterName}-node"
-              - Key: eks:cluster-name
-                Value: !Ref ClusterName
-
   # EKS Managed Node Group
   NodeGroup:
     Type: AWS::EKS::Nodegroup
     DependsOn:
       - EKSCluster
       - NodeInstanceRole
-      - NodeLaunchTemplate
     Properties:
       ClusterName: !Ref EKSCluster
       NodegroupName: !Sub "${ClusterName}-nodegroup"
@@ -453,9 +436,6 @@ Resources:
         - !Ref PrivateSubnet1
         - !Ref PrivateSubnet2
       NodeRole: !GetAtt NodeInstanceRole.Arn
-      LaunchTemplate:
-        Name: !Ref NodeLaunchTemplate
-        Version: "$Latest"
       ReleaseVersion: !Ref AMI
       CapacityType: ON_DEMAND
       Tags:
@@ -572,10 +552,6 @@ Outputs:
       Fn::Join:
         - ","
         - [!Ref PrivateSubnet1, !Ref PrivateSubnet2]
-
-  NatGatewayId:
-    Description: "ID of the NAT Gateway"
-    Value: !Ref NatGateway
 
   S3EndpointId:
     Description: "ID of the S3 VPC Endpoint"
