@@ -368,6 +368,24 @@ Resources:
       FromPort: -1
       ToPort: -1
       SourceSecurityGroupId: !Ref NodeSecurityGroup
+  
+  # Allow all traffic from PrivateSubnet1 CIDR to Control Plane Security Group
+  ClusterControlPlaneIngressPrivateSubnet1:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Allow all traffic from PrivateSubnet1 CIDR to EKS Control Plane
+      GroupId: !Ref ClusterControlPlaneSecurityGroup
+      IpProtocol: -1  # -1 signifies all protocols
+      CidrIp: !Select [2, !Cidr [!Ref VpcCidrBlock, 8, 8]]  # CIDR of PrivateSubnet1
+  
+  # Allow all traffic from PrivateSubnet2 CIDR to Control Plane Security Group
+  ClusterControlPlaneIngressPrivateSubnet2:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Allow all traffic from PrivateSubnet2 CIDR to EKS Control Plane
+      GroupId: !Ref ClusterControlPlaneSecurityGroup
+      IpProtocol: -1  # -1 signifies all protocols
+      CidrIp: !Select [3, !Cidr [!Ref VpcCidrBlock, 8, 8]]  # CIDR of PrivateSubnet2    
 
   # EKS Cluster Role
   EKSClusterRole:
