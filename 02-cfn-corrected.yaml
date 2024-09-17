@@ -16,10 +16,10 @@ Parameters:
     Description: Kubernetes version for the EKS cluster.
     Default: "1.28"
 
-#  AMI:
-#    Type: String
-#    Description: Kubernetes version for the EKS cluster.
-#    Default: "1.28.11-20240910"
+  AMI:
+    Type: String
+    Description: Kubernetes version for the EKS cluster.
+    Default: "1.28.11-20240910"
 
   VpcCidrBlock:
     Type: String
@@ -45,6 +45,11 @@ Parameters:
     Type: Number
     Description: Maximum size of the node group.
     Default: 4
+
+  NodeGroupDiskSize:
+    Type: Number
+    Description: Maximum size of the node group.
+    Default: 20
 
   AvailabilityZone1:
     Type: AWS::EC2::AvailabilityZone::Name
@@ -426,19 +431,19 @@ Resources:
       - EKSCluster
       - NodeInstanceRole
     Properties:
-      ClusterName: !Ref EKSCluster
+      ClusterName: !Ref ClusterName
       NodeRole: !GetAtt NodeInstanceRole.Arn
       Subnets:
         - !Ref PrivateSubnet1
         - !Ref PrivateSubnet2
       ScalingConfig:
-        DesiredSize: 1
-        MinSize: 1
-        MaxSize: 2
+        DesiredSize: !Ref NodeGroupDesiredCapacity
+        MinSize: !Ref NodeGroupMaxSize
+        MaxSize: !Ref NodeGroupMinSize
       InstanceTypes:
         - t3.medium
-      DiskSize: 20
-#      ReleaseVersion: !Ref AMI
+      DiskSize: !Ref NodeGroupDiskSize
+      ReleaseVersion: !Ref AMI
 
   # S3 Bucket for Data Storage (Simulate production environment)
   S3Bucket:
@@ -484,37 +489,37 @@ Resources:
   # EKS Add-ons: CoreDNS, VPC CNI, and kube-proxy
 
   # CoreDNS Addon
-  #CoreDNSAddon:
-  #  Type: AWS::EKS::Addon
-  #  DependsOn:
-  #    - EKSCluster
-  #    - NodeGroup
-  #  Properties:
-  #    AddonName: coredns
-  #    ClusterName: !Ref ClusterName
-  #    ResolveConflicts: OVERWRITE
+  CoreDNSAddon:
+    Type: AWS::EKS::Addon
+    DependsOn:
+      - EKSCluster
+      - NodeGroup
+    Properties:
+      AddonName: coredns
+      ClusterName: !Ref ClusterName
+      ResolveConflicts: OVERWRITE
 
   # VPC CNI Addon
-  #VPCCNIAddon:
-  #  Type: AWS::EKS::Addon
-  #  DependsOn:
-  #    - EKSCluster
-  #    - NodeGroup
-  #  Properties:
-  #    AddonName: vpc-cni
-  #    ClusterName: !Ref ClusterName
-  #   ResolveConflicts: OVERWRITE
+  VPCCNIAddon:
+    Type: AWS::EKS::Addon
+    DependsOn:
+      - EKSCluster
+      - NodeGroup
+    Properties:
+      AddonName: vpc-cni
+      ClusterName: !Ref ClusterName
+      ResolveConflicts: OVERWRITE
 
   # kube-proxy Addon
-  #KubeProxyAddon:
-  #  Type: AWS::EKS::Addon
-  #  DependsOn:
-  #    - EKSCluster
-  #    - NodeGroup
-  #  Properties:
-  #    AddonName: kube-proxy
-  #    ClusterName: !Ref ClusterName
-  #    ResolveConflicts: OVERWRITE
+  KubeProxyAddon:
+    Type: AWS::EKS::Addon
+    DependsOn:
+      - EKSCluster
+      - NodeGroup
+    Properties:
+      AddonName: kube-proxy
+      ClusterName: !Ref ClusterName
+      ResolveConflicts: OVERWRITE
 
 Outputs:
   ClusterName:
