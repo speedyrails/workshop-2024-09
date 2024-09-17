@@ -18,8 +18,23 @@ Parameters:
 
   AMI:
     Type: String
-    Description: Kubernetes version for the EKS cluster.
+    Description: Kubernetes version for the AMI release version.
     Default: "1.28.11-20240910"
+
+  AddonVPC:
+    Type: String
+    Description: Kubernetes version for VPC CNI Addon.
+    Default: "v1.16.3-eksbuild.3"
+
+  AddonCore:
+    Type: String
+    Description: Kubernetes version for Core DNS Addon.
+    Default: "v1.11.1-eksbuild.4"
+
+  AddonKube:
+    Type: String
+    Description: Kubernetes version for Kube Proxy Addon.
+    Default: "v1.29.0-eksbuild.1"       
 
   VpcCidrBlock:
     Type: String
@@ -518,6 +533,7 @@ Resources:
       AddonName: coredns
       ClusterName: !Ref ClusterName
       ResolveConflicts: OVERWRITE
+      AddonVersion: !Ref AddonCore
 
   # VPC CNI Addon
   VPCCNIAddon:
@@ -529,6 +545,7 @@ Resources:
       AddonName: vpc-cni
       ClusterName: !Ref ClusterName
       ResolveConflicts: OVERWRITE
+      AddonVersion: !Ref AddonVPC
 
   # kube-proxy Addon
   KubeProxyAddon:
@@ -540,6 +557,7 @@ Resources:
       AddonName: kube-proxy
       ClusterName: !Ref ClusterName
       ResolveConflicts: OVERWRITE
+      AddonVersion: !Ref AddonKube
 
 Outputs:
   ClusterName:
