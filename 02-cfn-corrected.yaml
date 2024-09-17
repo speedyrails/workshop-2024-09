@@ -438,8 +438,8 @@ Resources:
         - !Ref PrivateSubnet2
       ScalingConfig:
         DesiredSize: !Ref NodeGroupDesiredCapacity
-        MinSize: !Ref NodeGroupMaxSize
-        MaxSize: !Ref NodeGroupMinSize
+        MinSize: !Ref NodeGroupMinSize
+        MaxSize: !Ref NodeGroupMaxSize
       InstanceTypes:
         - t3.medium
       DiskSize: !Ref NodeGroupDiskSize
@@ -529,10 +529,6 @@ Outputs:
   ClusterEndpoint:
     Description: Endpoint of the EKS cluster (private)
     Value: !GetAtt EKSCluster.Endpoint
-
-  ClusterVersion:
-    Description: Kubernetes version of the EKS cluster
-    Value: !GetAtt EKSCluster.Version
 
   S3BucketName:
     Description: Name of the S3 bucket
