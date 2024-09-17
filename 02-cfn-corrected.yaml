@@ -16,10 +16,10 @@ Parameters:
     Description: Kubernetes version for the EKS cluster.
     Default: "1.28"
 
-  AMI:
-    Type: String
-    Description: Kubernetes version for the EKS cluster.
-    Default: "1.28.11-20240910"
+#  AMI:
+#    Type: String
+#    Description: Kubernetes version for the EKS cluster.
+#    Default: "1.28.11-20240910"
 
   VpcCidrBlock:
     Type: String
@@ -438,7 +438,7 @@ Resources:
       InstanceTypes:
         - t3.medium
       DiskSize: 20
-      ReleaseVersion: !Ref AMI
+#      ReleaseVersion: !Ref AMI
 
   # S3 Bucket for Data Storage (Simulate production environment)
   S3Bucket:
