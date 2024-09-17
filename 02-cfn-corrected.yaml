@@ -39,7 +39,7 @@ Parameters:
   NodeGroupMinSize:
     Type: Number
     Description: Minimum size of the node group.
-    Default: 1
+    Default: 2
 
   NodeGroupMaxSize:
     Type: Number
