@@ -9,7 +9,7 @@ Parameters:
   ClusterName:
     Type: String
     Description: The name of the EKS cluster.
-    Default: my-eks-cluster
+    Default: poorly-optimized-eks-cluster
 
   KubernetesVersion:
     Type: String
@@ -18,23 +18,23 @@ Parameters:
 
   AMI:
     Type: String
-    Description: Kubernetes version for the AMI release version.
+    Description: Kubernetes version for the AMI release version. https://github.com/awslabs/amazon-eks-ami/releases
     Default: "1.28.11-20240910"
 
   AddonVPC:
     Type: String
-    Description: Kubernetes version for VPC CNI Addon.
-    Default: "v1.16.3-eksbuild.3"
+    Description: Kubernetes version for VPC CNI Addon. https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html
+    Default: "v1.18.3-eksbuild.3"
 
   AddonCore:
     Type: String
-    Description: Kubernetes version for Core DNS Addon.
-    Default: "v1.11.1-eksbuild.4"
+    Description: Kubernetes version for Core DNS Addon. https://docs.aws.amazon.com/eks/latest/userguide/managing-coredns.html
+    Default: "v1.10.1-eksbuild.13"
 
   AddonKube:
     Type: String
-    Description: Kubernetes version for Kube Proxy Addon.
-    Default: "v1.29.0-eksbuild.1"       
+    Description: Kubernetes version for Kube Proxy Addon. https://docs.aws.amazon.com/eks/latest/userguide/managing-kube-proxy.html
+    Default: "v1.28.12-eksbuild.5"       
 
   VpcCidrBlock:
     Type: String
@@ -69,12 +69,12 @@ Parameters:
   AvailabilityZone1:
     Type: AWS::EC2::AvailabilityZone::Name
     Description: The first Availability Zone to use for subnets.
-    Default: us-east-1a
+    Default: us-east-2a
 
   AvailabilityZone2:
     Type: AWS::EC2::AvailabilityZone::Name
     Description: The second Availability Zone to use for subnets.
-    Default: us-east-1b
+    Default: us-east-2b
 
 Resources:
   # VPC Creation
