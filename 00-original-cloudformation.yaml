@@ -18,7 +18,7 @@ Parameters:
 
   AMI:
     Type: String
-    Description: Kubernetes version for the AMI release version.
+    Description: Kubernetes version for the AMI release version. https://github.com/awslabs/amazon-eks-ami/releases
     Default: "1.28.11-20240910"
 
   AddonVPC:
